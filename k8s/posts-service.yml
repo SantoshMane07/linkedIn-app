@@ -1,0 +1,51 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: posts-service
+spec:
+  selector:
+    matchLabels:
+      app: posts-service
+  template:
+    metadata:
+      labels:
+        app: posts-service
+    spec:
+      containers:
+      - name: posts-service
+        image: santoshmane07/linkedin-app-posts-service
+        resources:
+          limits:
+            memory: "400Mi"
+            cpu: "200m"
+          requests:
+            memory: "200Mi"
+            cpu: "100m"
+        env:
+          - name: SPRING_PROFILES_ACTIVE
+            value: k8s
+          - name: DB_USER
+            value: user
+          - name: DB_PASSWORD
+            value: password
+          - name: DB_SERVICE
+            value: posts-db
+          - name: DB_NAME
+            value: postsDB
+        ports:
+        - containerPort: 9010
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: posts-service
+spec:
+  selector:
+    app: posts-service
+  ports:
+  - port: 80
+    targetPort: 9010
+
+  

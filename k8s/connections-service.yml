@@ -1,0 +1,51 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: connections-service
+spec:
+  selector:
+    matchLabels:
+      app: connections-service
+  template:
+    metadata:
+      labels:
+        app: connections-service
+    spec:
+      containers:
+      - name: connections-service
+        image: santoshmane07/linkedin-app-connections-service
+        resources:
+          limits:
+            memory: "400Mi"
+            cpu: "200m"
+          requests:
+            memory: "200Mi"
+            cpu: "100m"
+        env:
+          - name: SPRING_PROFILES_ACTIVE
+            value: k8s
+          # - name: DB_USER
+          #   value: user
+          # - name: DB_PASSWORD
+          #   value: password
+          # - name: DB_SERVICE
+          #   value: connections-db
+          # - name: DB_NAME
+          #   value: connectionsDB
+        ports:
+        - containerPort: 9030
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: connections-service
+spec:
+  selector:
+    app: connections-service
+  ports:
+  - port: 80
+    targetPort: 9030
+
+  
