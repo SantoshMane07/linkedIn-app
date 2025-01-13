@@ -1,0 +1,63 @@
+name: SpringBoot CI/CD Pipeline
+
+on:
+  push:
+    branches: [ master ]
+  workflow_dispatch:
+
+env:
+  PROJECT_ID: ${{ secrets.GKE_PROJECT }}
+  GKE_CLUSTER: 	ecommerce-cluster
+  GKE_ZONE: asia-south1
+
+jobs:
+  Build:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        service:
+          - api-gateway
+          - connections-service
+          - notification-service
+          - posts-service
+          - user-service
+
+    steps:
+      # Step 1: Checkout the repository
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      # Step 2: Set up Java
+      - name: Set up Java 21
+        uses: actions/setup-java@v3
+        with:
+          distribution: 'temurin'
+          java-version: '21'
+
+      # Step 3: Log in to Docker Hub
+      - name: Log in to Docker Hub
+        uses: docker/login-action@v2
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+
+      # Step 4: Build and push Docker images using Jib for each service
+      - name: Build and Push ${{ matrix.service }}
+        working-directory: ${{ matrix.service }}
+        run: |
+          ./mvnw clean package -DskipTests
+
+  Deploy:
+    needs: Build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@master
+      - name: kubectl - Google Cloud GKE cluster.
+        uses: ameydev/gke-kubectl-action@master
+        env:
+          PROJECT_ID: ${{ env.PROJECT_ID }}
+          APPLICATION_CREDENTIALS: ${{ secrets.GK_SA_KEY }}
+          CLUSTER_NAME: ${{ env.GKE_CLUSTER }}
+          ZONE_NAME: ${{ env.GKE_ZONE }}
+        with:
+          args: apply -f k8s/
