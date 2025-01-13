@@ -40,7 +40,9 @@ jobs:
         with:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
-
+      # Make mvn executable before build and push
+      - name: Set executable permission for mvnw
+        run: chmod +x ${{ matrix.service }}/mvnw
       # Step 4: Build and push Docker images using Jib for each service
       - name: Build and Push ${{ matrix.service }}
         working-directory: ${{ matrix.service }}
