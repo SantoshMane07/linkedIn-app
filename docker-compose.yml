@@ -140,6 +140,18 @@ services:
     depends_on:
       - discovery-server
 
+  uploader-service:
+    image: santoshmane07/linkedin-app-uploader-service
+    container_name: uploader-service
+    ports:
+      - "9050:9050"
+    env_file:
+      - .env
+    networks:
+      - linkedin-network
+    depends_on:
+      - discovery-server
+
 networks:
   linkedin-network:
 

@@ -8,5 +8,6 @@ import lombok.Data;
 public class PostCreatedEvent {
     Long creatorId;
     String content;
+    String imageUrl;
     Long postId;
 }

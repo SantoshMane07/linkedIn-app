@@ -20,6 +20,9 @@ public class Post {
     @Column(nullable = false)
     private String content;
 
+    @Column(nullable = true)
+    private String imageUrl;
+
     @Column(nullable = false)
     private Long userId;
 

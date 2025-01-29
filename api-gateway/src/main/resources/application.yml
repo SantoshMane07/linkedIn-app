@@ -33,3 +33,10 @@ spring:
             - StripPrefix=2
             - name: AuthenticationFilter
 
+        - id: uploader-service
+          uri: ${UPLOADER_SERVICE_URI:lb://UPLOADER-SERVICE}
+          predicates:
+            - Path=/api/v1/uploads/**
+          filters:
+            - StripPrefix=2
+            - name: AuthenticationFilter

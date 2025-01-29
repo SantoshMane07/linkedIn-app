@@ -1,0 +1,29 @@
+spring.application.name: uploader-service
+
+server.servlet.context-path: /uploads
+server.port: 9050
+#eureka.client.service-url.defaultZone: http://localhost:8761/eureka
+eureka.client.service-url.defaultZone: http://discovery-server:8761/eureka
+
+cloudinary:
+  cloud-name: ${CLOUD_NAME}
+  api-key: ${API_KEY}
+  api-secret: ${API_SECRET}
+
+gcs:
+  bucket-name: ${GCS_BUCKET_NAME}
+  access-account: >
+    {
+      "type": "service_account",
+      "project_id": "${GCS_PROJECT_ID}",
+      "private_key_id": "${GCS_PRIVATE_KEY_ID}",
+      "private_key": "${GCS_PRIVATE_KEY}",
+      "client_email": "${GCS_CLIENT_EMAIL}",
+      "client_id": "${GCS_CLIENT_ID}",
+      "auth_uri": "${GCS_AUTH_URI}",
+      "token_uri": "${GCS_TOKEN_URI}",
+      "auth_provider_x509_cert_url": "${GCS_AUTH_PROVIDER_CERT_URL}",
+      "client_x509_cert_url": "${GCS_CLIENT_CERT_URL}",
+      "universe_domain": "${GCS_UNIVERSE_DOMAIN}"
+    }
+

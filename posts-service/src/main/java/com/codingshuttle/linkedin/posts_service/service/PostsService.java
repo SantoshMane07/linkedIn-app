@@ -40,6 +40,7 @@ public class PostsService {
                 .postId(savedPost.getId())
                 .creatorId(userId)
                 .content(savedPost.getContent())
+                .imageUrl(savedPost.getImageUrl())
                 .build();
 
         kafkaTemplate.send("post-created-topic", postCreatedEvent);
